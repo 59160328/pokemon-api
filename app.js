@@ -1,10 +1,9 @@
 // https://bit.ly/2KQb0gR
 const express = require("express");
 const app = express();
-const port = 3000;
 
 app.use(express.json());
-app.get("/", (req, res) => res.send("Hello World!"));
+app.get("/", (req, res) => res.send({ message: "Hello World!" }));
 class Pokemon {
   constructor(name, type) {
     this.name = name;
@@ -34,6 +33,12 @@ app.post("/pokemons", (req, res) => {
 
 // GET http://localhost:3000/pokemons/1
 app.get("/pokemons/:id", (req, res) => {
+  if (!isSufficientParam(req.body.id)) {
+    res.status(400).send({
+      error: "Insufficient parameter: name and type are required paremeter"
+    });
+    return;
+  }
   let id = req.params.id;
   let p = pokemons[id - 1];
   res.send[p];
@@ -78,7 +83,7 @@ app.delete("/pokemons/:id", (req, res) => {
     res
       .status(400)
       .send({ error: "Cannot delete pokemon: Pokemon is not found" });
-      return;
+    return;
   }
   delete pokemons[id - 1];
   res.sentStatus(204);
@@ -98,5 +103,4 @@ function generateNewId(num) {
 function isSufficientParam(v) {
   return v !== null || v !== "" || v !== undefined;
 }
-
-app.listen(port, () => console.log(`Example app listening on port ${3000}!`));
+module.exports = app;
